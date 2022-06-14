@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="coust.css">
+    <title>Document</title>
+</head>
+<body onload="fetchContacts()">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <a href="index.html" class="navbar-brand">Contact book</a>
+  
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+  
+          <div class="collapse navbar-collapse" id="navbar">
+            <div class="navbar-nav">
+              <a href="index.html" class="nav-item nav-link">Home</a>
+              <a href="add-contact.html" class="nav-item nav-link">Add Contact</a>
+            </div>
+          </div>
+        </nav>
+      </header>
+    <div id="table"class="container " >Contacts Loading..</div>
+    <div class="button-container-div">
+        <button id="refresh"   class="btn btn-secondary btn-outline-dark  " type="button">Refresh</button>
+        <button id="addContact"   class="btn btn-primary btn-outline-dark " type="button">Add Contact</button>
+    </div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+        document.getElementById("addContact").addEventListener("click",addContact)
+        document.getElementById("refresh").addEventListener("click",fetchContacts);
+
+        function fetchContacts(){
+        fetch(rootPath + "controller/get-contacts/")
+        .then(function(response){return response.json()})
+        .then(function(data){displayOutout(data)})
+    }
+
+    function displayOutout(data){
+        output="<table>";
+
+            for(a in data){
+                output+=`
+                    <tr onclick="editContact(${data[a].id})">
+                        <th>Picture :</th>
+                        <td><img class="img-thumbnail rounded-circle" src="${rootPath}controller/uploads/${data[a].avatar}" width="50"/></td>
+                        <th>Firstname:</th>
+                        <td class="table-primary"><h5>${data[a].firstname}</h5></td>
+                        <th>Lastname:</th>
+                        <td "table-secondary"><h5>${data[a].lastname}</h5></td>
+                    </tr>
+                `
+            }
+            output+="</table>";
+            document.getElementById("table").innerHTML=output;
+    }
+
+    function addContact(){
+        window.open("add-contact.html","_self");
+    }
+
+    function editContact(id){
+        window.open("edit-contact.html?id="+id ,"_self")
+    }
+
+
+    </script>
+</body>
+</html>
